@@ -14,6 +14,7 @@
 
         Converts the conditions in the specified hashtable to a Query string to append to a webrequest.
     #>
+	[OutputType([string])]
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]

@@ -6,11 +6,6 @@
 	.DESCRIPTION
 		Connets using a client secret.
 	
-	.PARAMETER Service
-		The name of the service to connect to.
-		Label associated with the token generated, the same must be used when
-		callng the Invoke-RestCommand command to associate the request with the connection.
-	
 	.PARAMETER ServiceUrl
 		The base url to the service connecting to.
 		Used for authentication, scopes and executing requests.
@@ -32,10 +27,6 @@
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-		[string]
-		$Service,
-
-		[Parameter(Mandatory = $true)]
 		[uri]
 		$ServiceUrl,
 

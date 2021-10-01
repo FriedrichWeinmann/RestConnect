@@ -25,6 +25,7 @@
 
 		Resolves the certificate to use for authentication.
 	#>
+	[OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2])]
 	[CmdletBinding()]
 	param (
 		$BoundParameters

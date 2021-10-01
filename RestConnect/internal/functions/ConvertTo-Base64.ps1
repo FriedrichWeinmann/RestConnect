@@ -19,6 +19,7 @@
 	
 		Reads the input file and converts its content into base64.
 #>
+	[OutputType([string])]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true)]

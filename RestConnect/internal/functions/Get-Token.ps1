@@ -23,6 +23,7 @@
 	
 		Retrieve the current access token for defender for endpoint.
 #>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
@@ -39,6 +40,7 @@
 	begin {
 		#region Utility Functions
 		function Update-Token {
+			[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 			[CmdletBinding()]
 			param (
 				[string]

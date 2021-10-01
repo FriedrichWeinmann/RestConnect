@@ -30,6 +30,7 @@
 	
 		Signs the specified token
 #>
+	[OutputType([string])]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true)]

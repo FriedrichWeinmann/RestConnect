@@ -133,14 +133,14 @@
 
 		[Parameter(Mandatory = $true, ParameterSetName = 'UsernamePassword')]
 		[PSCredential]
-		$Credemtial
+		$Credential
 	)
 	
 	process {
 		switch ($PSCmdlet.ParameterSetName) {
 			'AppSecret' {
 				$serviceToken = [Token]::new($ClientID, $TenantID, $ClientSecret, $ServiceUrl)
-				try { $authToken = Connect-ServiceClientSecret -Service $Service -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -ClientSecret $ClientSecret -ErrorAction Stop }
+				try { $authToken = Connect-ServiceClientSecret -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -ClientSecret $ClientSecret -ErrorAction Stop }
 				catch {
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
 				}
@@ -163,7 +163,7 @@
 				}
 				
 				$serviceToken = [Token]::new($ClientID, $TenantID, $cert, $ServiceUrl)
-				try { $authToken = Connect-ServiceCertificate -Service $Service -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Certificate $cert -ErrorAction Stop }
+				try { $authToken = Connect-ServiceCertificate -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Certificate $cert -ErrorAction Stop }
 				catch {
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
 				}
@@ -172,7 +172,7 @@
 			}
 			'UsernamePassword' {
 				$serviceToken = [Token]::new($ClientID, $TenantID, $Credential, $ServiceUrl)
-				try { $authToken = Connect-ServicePassword -Service $Service -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Credential $Credential -ErrorAction Stop }
+				try { $authToken = Connect-ServicePassword -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Credential $Credential -ErrorAction Stop }
 				catch {
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
 				}
