@@ -41,6 +41,11 @@ Copy-Item -Path "$($WorkingDirectory)\RestConnect" -Destination $publishDir.Full
 #region Gather text data to compile
 $text = @()
 
+# Gather Classes
+Get-ChildItem -Path "$($publishDir.FullName)\RestConnect\internal\classes\" -Recurse -File -Filter "*.ps1" | ForEach-Object {
+	$text += [System.IO.File]::ReadAllText($_.FullName)
+}
+
 # Gather commands
 Get-ChildItem -Path "$($publishDir.FullName)\RestConnect\internal\functions\" -Recurse -File -Filter "*.ps1" | ForEach-Object {
 	$text += [System.IO.File]::ReadAllText($_.FullName)
