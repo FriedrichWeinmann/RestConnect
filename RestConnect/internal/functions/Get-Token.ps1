@@ -50,15 +50,15 @@
 			$token = $script:tokens[$Service]
 			switch ($token.Type) {
 				'Certificate' {
-					try { Connect-MdeService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -Certificate $token.Certificate }
+					try { Connect-RestService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -Certificate $token.Certificate }
 					catch { throw }
 				}
 				'ClientSecret' {
-					try { Connect-MdeService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -ClientSecret $token.ClientSecret }
+					try { Connect-RestService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -ClientSecret $token.ClientSecret }
 					catch { throw }
 				}
 				'UsernamePassword' {
-					try { Connect-MdeService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -ClientSecret $token.Credential }
+					try { Connect-RestService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -ClientSecret $token.Credential }
 					catch { throw }
 				}
 				default {
