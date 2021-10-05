@@ -106,6 +106,10 @@
 			
 		[string[]]
 		$Scopes,
+
+		[Parameter(ParameterSetName = 'DeviceCode')]
+		[switch]
+		$DeviceCode,
 			
 		[Parameter(ParameterSetName = 'AppCertificate')]
 		[System.Security.Cryptography.X509Certificates.X509Certificate2]
@@ -173,6 +177,15 @@
 			'UsernamePassword' {
 				$serviceToken = [Token]::new($ClientID, $TenantID, $Credential, $ServiceUrl)
 				try { $authToken = Connect-ServicePassword -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Credential $Credential -ErrorAction Stop }
+				catch {
+					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
+				}
+				$serviceToken.SetTokenMetadata($authToken)
+				$script:tokens[$Service] = $serviceToken
+			}
+			'DeviceCode' {
+				$serviceToken = [Token]::new($ClientID, $TenantID, $true, $ServiceUrl)
+				try { $authToken = Connect-ServiceDeviceCode -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Scopes $Scopes -ErrorAction Stop }
 				catch {
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
 				}

@@ -44,6 +44,13 @@
 		$this.ServiceUrl = $ServiceUrl
 		$this.Type = 'UsernamePassword'
 	}
+
+	Token([string]$ClientID, [string]$TenantID, [bool]$DeviceCode, [string]$ServiceUrl) {
+		$this.ClientID = $ClientID
+		$this.TenantID = $TenantID
+		$this.ServiceUrl = $ServiceUrl
+		$this.Type = 'DeviceCode'
+	}
 	
 	Token([string]$ClientID, [string]$TenantID, [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate, [string]$ServiceUrl) {
 		$this.ClientID = $ClientID

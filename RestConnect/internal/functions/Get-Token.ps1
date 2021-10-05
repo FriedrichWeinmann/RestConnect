@@ -58,7 +58,11 @@
 					catch { throw }
 				}
 				'UsernamePassword' {
-					try { Connect-RestService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -ClientSecret $token.Credential }
+					try { Connect-RestService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -Credential $token.Credential }
+					catch { throw }
+				}
+				'DeviceCode' {
+					try { Connect-RestService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -DeviceCode }
 					catch { throw }
 				}
 				default {
