@@ -29,6 +29,10 @@
 		.PARAMETER Scopes
 			Any scopes to include in the request.
 			Only used for interactive/delegate workflows, ignored for Certificate based authentication or when using Client Secrets.
+
+		.PARAMETER DeviceCode
+			Use the Device Code delegate authentication flow.
+			This will prompt the user to complete login via browser.
 		
 		.PARAMETER Certificate
 			The Certificate object used to authenticate with.
