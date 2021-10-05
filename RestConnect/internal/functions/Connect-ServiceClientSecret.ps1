@@ -20,7 +20,7 @@
 		The actual secret used for authenticating the request.
 	
 	.EXAMPLE
-		PS C:\> Connect-ServiceClientSecret -Service MyAPI -ServiceUrl $url -ClientID '<ClientID>' -TenantID '<TenantID>' -ClientSecret $secret
+		PS C:\> Connect-ServiceClientSecret -ServiceUrl $url -ClientID '<ClientID>' -TenantID '<TenantID>' -ClientSecret $secret
 	
 		Connects to the specified tenant using the specified client and secret.
 #>
