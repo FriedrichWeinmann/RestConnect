@@ -26,6 +26,7 @@
 	[hashtable]$Data = @{ }
 	[scriptblock]$GetHeaderCode
 	[scriptblock]$RefreshTokenCode
+	[hashtable]$ExtraHeaderContent = @{ }
 	#endregion Extension Data
 
 	#region Constructors
@@ -59,17 +60,27 @@
 		$this.ServiceUrl = $ServiceUrl
 		$this.Type = 'Certificate'
 	}
+
+	Token() {
+		
+	}
 	#endregion Constructors
 
-    [void]SetTokenMetadata([PSObject] $AuthToken) {
-        $this.AccessToken = $AuthToken.AccessToken
-        $this.ValidAfter = $AuthToken.ValidAfter
-        $this.ValidUntil = $AuthToken.ValidUntil
-        $this.Scopes = $AuthToken.Scopes
-    }
+	[void]SetTokenMetadata([PSObject] $AuthToken) {
+		$this.AccessToken = $AuthToken.AccessToken
+		$this.ValidAfter = $AuthToken.ValidAfter
+		$this.ValidUntil = $AuthToken.ValidUntil
+		$this.Scopes = $AuthToken.Scopes
+	}
 
 	[hashtable]GetHeader() {
-		if ($this.GetHeaderCode) { return & $this.GetHeaderCode $this }
-		return @{ Authorization = "Bearer $($this.AccessToken)" }
+		if ($this.GetHeaderCode) { $headerHash = & $this.GetHeaderCode $this }
+		else { $headerHash = @{ Authorization = "Bearer $($this.AccessToken)" } }
+
+		foreach ($pair in $this.ExtraHeaderContent.GetEnumerator()) {
+			$headerHash[$pair.Key] = $pair.Value
+		}
+
+		return $headerHash
 	}
 }
