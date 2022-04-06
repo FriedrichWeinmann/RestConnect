@@ -29,6 +29,9 @@
 	
 	.PARAMETER Service
 		Which service to execute against.
+
+	.PARAMETER Header
+		Additional header data to include.
 	
 	.EXAMPLE
 		PS C:\> Invoke-RestRequest -Path 'alerts' -RequiredScopes 'Alert.Read' -Service mde
@@ -55,7 +58,10 @@
 		
 		[Parameter(Mandatory = $true)]
 		[string]
-		$Service
+		$Service,
+
+		[Hashtable]
+		$Header = @{ }
 	)
 	
 	begin{
@@ -68,7 +74,7 @@
         $parameters = @{
             Method = $Method
             Uri = "$($baseUri)/$($Path.TrimStart('/'))"
-            Headers = $token.GetHeader()
+            Headers = $token.GetHeader() + $Header
         }
         if ($Body.Count -gt 0) {
             $parameters.Body = $Body | ConvertTo-Json -Compress
