@@ -41,6 +41,10 @@
 	.PARAMETER Data
 		A hashtable of additional data to store in the token object.
 		Use this for any data needed by the scriptblock logic for producing the header or refreshing the connection.
+
+	.PARAMETER ExtraHeaderContent
+		Additional header data to include in any request sent through this connection.
+		This header is _not_ used for any connections, but on each request started with Invoke-RestRequest.
 	
 	.EXAMPLE
 		PS C:\> Set-RestConnection -Service MyService -ServiceUrl "https://MyService.contoso.com/api" -Data $data -GetHeaderCode $headerCode -RefreshTokenCode $refreshCode
@@ -76,7 +80,10 @@
 		$RefreshTokenCode,
 
 		[hashtable]
-		$Data
+		$Data,
+
+		[hashtable]
+		$ExtraHeaderContent
 	)
 	$commonParameters = 'Verbose','Debug','ErrorAction','WarningAction','InformationAction','ErrorVariable','WarningVariable','InformationVariable','OutVariable','OutBuffer','PipelineVariable'
 	$token = $script:tokens[$Service]
