@@ -62,7 +62,10 @@
 		
 		
 		if ($Exception) { $newException = $Exception.GetType()::new($Message, $Exception) }
-		elseif ($ErrorRecord) { $newException = $ErrorRecord.Exception.GetType()::new($Message, $ErrorRecord.Exception) }
+		elseif ($ErrorRecord) {
+			try { $newException = $ErrorRecord.Exception.GetType()::new($Message, $ErrorRecord.Exception) }
+			catch { $newException = [System.Exception]::new($Message, $ErrorRecord.Exception) }
+		}
 		else { $newException = $exceptionType::new($Message) }
 		$record = [System.Management.Automation.ErrorRecord]::new($newException, (Get-PSCallStack)[1].FunctionName, $Category, $Target)
 		$Cmdlet.ThrowTerminatingError($record)
