@@ -62,7 +62,7 @@
 					catch { throw }
 				}
 				'DeviceCode' {
-					try { Connect-RestService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -DeviceCode }
+					try { Connect-RestService -Service $Service -ServiceUrl $token.ServiceUrl -ClientID $token.ClientID -TenantID $token.TenantID -Scopes $token.Scopes -DeviceCode }
 					catch { throw }
 				}
 				default {

@@ -4,7 +4,7 @@
 	RootModule        = 'RestConnect.psm1'
 
 	# Version number of this module.
-	ModuleVersion     = '1.0.4'
+	ModuleVersion     = '1.0.5'
 
 	# Supported PSEditions
 	# CompatiblePSEditions = @()
@@ -19,7 +19,7 @@
 	CompanyName       = 'Microsoft'
 
 	# Copyright statement for this module
-	Copyright         = '(c) Friedrich Weinmann# . All rights reserved.'
+	Copyright         = '(c) Friedrich Weinmann. All rights reserved.'
 
 	# Description of the functionality provided by this module
 	Description       = 'Authentication and request execution for API clients generated from AutoRest'

@@ -49,6 +49,9 @@
 		if ($scope -like 'https://*/*') { $scope }
 		else { "{0}://{1}/{2}" -f $ServiceUrl.Scheme, $ServiceUrl.Host, $scope }
 	}
+	if (@($actualScopes).Count -gt 1 -and ($actualScopes | Where-Object { $_ -like '*/.default' })) {
+		$actualScopes = $actualScopes | Where-Object { $_ -notlike '*/.default' }
+	}
 
 	try {
 		$initialResponse = Invoke-RestMethod -Method POST -Uri "https://login.microsoftonline.com/$TenantID/oauth2/v2.0/devicecode" -Body @{
@@ -63,9 +66,9 @@
 	Write-Host $initialResponse.message
 
 	$paramRetrieve = @{
-		Uri    = "https://login.microsoftonline.com/$TenantID/oauth2/v2.0/token"
-		Method = "POST"
-		Body   = @{
+		Uri         = "https://login.microsoftonline.com/$TenantID/oauth2/v2.0/token"
+		Method      = "POST"
+		Body        = @{
 			grant_type  = "urn:ietf:params:oauth:grant-type:device_code"
 			client_id   = $ClientID
 			device_code = $initialResponse.device_code
@@ -85,10 +88,23 @@
 		}
 	}
 
+	$notBefore = Get-Date
+	if ($authResponse.not_before) {
+		$notBefore = (Get-Date -Date '1970-01-01').AddSeconds($authResponse.not_before).ToLocalTime()
+	}
+	$notAfter = (Get-Date).AddHours(1)
+	if ($authResponse.expires_on) {
+		$notAfter = (Get-Date -Date '1970-01-01').AddSeconds($authResponse.expires_on).ToLocalTime()
+	}
+	if ($authResponse.expires_in) {
+		$notAfter = (Get-Date).AddSeconds($authResponse.expires_in).ToLocalTime()
+	}
+	
+
 	[pscustomobject]@{
 		AccessToken = $authResponse.access_token
-		ValidAfter  = (Get-Date -Date '1970-01-01').AddSeconds($authResponse.not_before).ToLocalTime()
-		ValidUntil  = (Get-Date -Date '1970-01-01').AddSeconds($authResponse.expires_on).ToLocalTime()
+		ValidAfter  = $notBefore
+		ValidUntil  = $notAfter
 		Scopes      = $authResponse.scope -split " "
 	}
 }
