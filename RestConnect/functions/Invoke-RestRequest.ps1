@@ -76,6 +76,8 @@
             Uri = "$($baseUri)/$($Path.TrimStart('/'))"
             Headers = $token.GetHeader() + $Header
         }
+		if ($Path -match '^http://|^https://') { $parameters.Uri = $Path }
+		
         if ($Body.Count -gt 0) {
             $parameters.Body = $Body | ConvertTo-Json -Compress
         }
