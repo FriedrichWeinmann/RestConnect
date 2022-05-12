@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+## 1.0.9 (2022-05-12)
+
++ Upd: Invoke-RestRequest - Increased mx body serialization depth to 99 to allow complex body constructs
+
 ## 1.0.8 (2022-05-12)
 
 + Upd: Connect-RestService - Added `-Resource` parameter to support connecting to services that differentiate between connection url and resource name.

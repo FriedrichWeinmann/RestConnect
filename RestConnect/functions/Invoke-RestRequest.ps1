@@ -79,7 +79,7 @@
 		if ($Path -match '^http://|^https://') { $parameters.Uri = $Path }
 		
         if ($Body.Count -gt 0) {
-            $parameters.Body = $Body | ConvertTo-Json -Compress
+            $parameters.Body = $Body | ConvertTo-Json -Compress -Depth 99
         }
         if ($Query.Count -gt 0) {
             $parameters.Uri += ConvertTo-QueryString -QueryHash $Query
