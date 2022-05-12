@@ -6,9 +6,8 @@
 	.DESCRIPTION
 		Connects to Azure AD using the Device Code authentication workflow.
 	
-	.PARAMETER ServiceUrl
-		The base url to the service connecting to.
-		Used for authentication, scopes and executing requests.
+	.PARAMETER Resource
+		The resource to authenticate to.
 
 	.PARAMETER ClientID
 		The ID of the registered app used with this authentication request.
@@ -30,8 +29,8 @@
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
-		[uri]
-		$ServiceUrl,
+		[string]
+		$Resource,
 
 		[Parameter(Mandatory = $true)]
 		[string]
@@ -46,8 +45,9 @@
 	)
 
 	$actualScopes = foreach ($scope in $Scopes) {
-		if ($scope -like 'https://*/*') { $scope }
-		else { "{0}://{1}/{2}" -f $ServiceUrl.Scheme, $ServiceUrl.Host, $scope }
+		if ($scope -like 'https://*/*') { $scope; continue }
+		if ($scope -like "$Resource/*") { $scope; continue }
+		"$Resource/$scope"
 	}
 	if (@($actualScopes).Count -gt 1 -and ($actualScopes | Where-Object { $_ -like '*/.default' })) {
 		$actualScopes = $actualScopes | Where-Object { $_ -notlike '*/.default' }

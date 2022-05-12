@@ -11,6 +11,7 @@
 	[string]$ClientID
 	[string]$TenantID
 	[string]$ServiceUrl
+	[string]$Resource
 	
 	# Workflow: Client Secret
 	[System.Security.SecureString]$ClientSecret
@@ -30,34 +31,54 @@
 	#endregion Extension Data
 
 	#region Constructors
-	Token([string]$ClientID, [string]$TenantID, [Securestring]$ClientSecret, [string]$ServiceUrl) {
+	Token([string]$ClientID, [string]$TenantID, [Securestring]$ClientSecret, [string]$ServiceUrl, [string]$Resource) {
 		$this.ClientID = $ClientID
 		$this.TenantID = $TenantID
 		$this.ClientSecret = $ClientSecret
 		$this.ServiceUrl = $ServiceUrl
+		$this.Resource = $Resource
+		if (-not $Resource) {
+			$uri = [uri]$ServiceUrl
+			$this.Resource = '{0}://{1}' -f $uri.Scheme, $uri.Host
+		}
 		$this.Type = 'ClientSecret'
 	}
 
-	Token([string]$ClientID, [string]$TenantID, [pscredential]$Credential, [string]$ServiceUrl) {
+	Token([string]$ClientID, [string]$TenantID, [pscredential]$Credential, [string]$ServiceUrl, [string]$Resource) {
 		$this.ClientID = $ClientID
 		$this.TenantID = $TenantID
 		$this.Credential = $Credential
 		$this.ServiceUrl = $ServiceUrl
+		$this.Resource = $Resource
+		if (-not $Resource) {
+			$uri = [uri]$ServiceUrl
+			$this.Resource = '{0}://{1}' -f $uri.Scheme, $uri.Host
+		}
 		$this.Type = 'UsernamePassword'
 	}
 
-	Token([string]$ClientID, [string]$TenantID, [bool]$DeviceCode, [string]$ServiceUrl) {
+	Token([string]$ClientID, [string]$TenantID, [bool]$DeviceCode, [string]$ServiceUrl, [string]$Resource) {
 		$this.ClientID = $ClientID
 		$this.TenantID = $TenantID
 		$this.ServiceUrl = $ServiceUrl
+		$this.Resource = $Resource
+		if (-not $Resource) {
+			$uri = [uri]$ServiceUrl
+			$this.Resource = '{0}://{1}' -f $uri.Scheme, $uri.Host
+		}
 		$this.Type = 'DeviceCode'
 	}
 	
-	Token([string]$ClientID, [string]$TenantID, [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate, [string]$ServiceUrl) {
+	Token([string]$ClientID, [string]$TenantID, [System.Security.Cryptography.X509Certificates.X509Certificate2]$Certificate, [string]$ServiceUrl, [string]$Resource) {
 		$this.ClientID = $ClientID
 		$this.TenantID = $TenantID
 		$this.Certificate = $Certificate
 		$this.ServiceUrl = $ServiceUrl
+		$this.Resource = $Resource
+		if (-not $Resource) {
+			$uri = [uri]$ServiceUrl
+			$this.Resource = '{0}://{1}' -f $uri.Scheme, $uri.Host
+		}
 		$this.Type = 'Certificate'
 	}
 

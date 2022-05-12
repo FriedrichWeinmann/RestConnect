@@ -73,6 +73,10 @@
 
 			Part of the Username and Password delegate authentication workflow.
 			Note: This workflow only works with cloud-only accounts and requires scopes to be pre-approved.
+
+		.PARAMETER Resource
+			The resource to authenticate to.
+			Defaults to the service url's base-path.
 		
 		.EXAMPLE
 			PS C:\> Connect-RestService -Service MyAPI -ServiceUrl $url -ClientID $clientID -TenantID $tenantID -Certificate $cert
@@ -141,14 +145,17 @@
 
 		[Parameter(Mandatory = $true, ParameterSetName = 'UsernamePassword')]
 		[PSCredential]
-		$Credential
+		$Credential,
+
+		[string]
+		$Resource
 	)
 	
 	process {
 		switch ($PSCmdlet.ParameterSetName) {
 			'AppSecret' {
-				$serviceToken = [Token]::new($ClientID, $TenantID, $ClientSecret, $ServiceUrl)
-				try { $authToken = Connect-ServiceClientSecret -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -ClientSecret $ClientSecret -ErrorAction Stop }
+				$serviceToken = [Token]::new($ClientID, $TenantID, $ClientSecret, $ServiceUrl, $Resource)
+				try { $authToken = Connect-ServiceClientSecret -Resource $serviceToken.Resource -ClientID $ClientID -TenantID $TenantID -ClientSecret $ClientSecret -ErrorAction Stop }
 				catch {
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
 				}
@@ -170,8 +177,8 @@
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -Message "Failed to access private key on Certificate $($cert.Thumbprint)"
 				}
 				
-				$serviceToken = [Token]::new($ClientID, $TenantID, $cert, $ServiceUrl)
-				try { $authToken = Connect-ServiceCertificate -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Certificate $cert -ErrorAction Stop }
+				$serviceToken = [Token]::new($ClientID, $TenantID, $cert, $ServiceUrl, $Resource)
+				try { $authToken = Connect-ServiceCertificate -Resource $serviceToken.Resource -ClientID $ClientID -TenantID $TenantID -Certificate $cert -ErrorAction Stop }
 				catch {
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
 				}
@@ -179,8 +186,8 @@
 				$script:tokens[$Service] = $serviceToken
 			}
 			'UsernamePassword' {
-				$serviceToken = [Token]::new($ClientID, $TenantID, $Credential, $ServiceUrl)
-				try { $authToken = Connect-ServicePassword -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Credential $Credential -ErrorAction Stop }
+				$serviceToken = [Token]::new($ClientID, $TenantID, $Credential, $ServiceUrl, $Resource)
+				try { $authToken = Connect-ServicePassword -Resource $serviceToken.Resource -ClientID $ClientID -TenantID $TenantID -Credential $Credential -ErrorAction Stop }
 				catch {
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
 				}
@@ -188,8 +195,8 @@
 				$script:tokens[$Service] = $serviceToken
 			}
 			'DeviceCode' {
-				$serviceToken = [Token]::new($ClientID, $TenantID, $true, $ServiceUrl)
-				try { $authToken = Connect-ServiceDeviceCode -ServiceUrl $ServiceUrl -ClientID $ClientID -TenantID $TenantID -Scopes $Scopes -ErrorAction Stop }
+				$serviceToken = [Token]::new($ClientID, $TenantID, $true, $ServiceUrl, $Resource)
+				try { $authToken = Connect-ServiceDeviceCode -Resource $serviceToken.Resource -ClientID $ClientID -TenantID $TenantID -Scopes $Scopes -ErrorAction Stop }
 				catch {
 					Invoke-TerminatingException -Cmdlet $PSCmdlet -ErrorRecord $_
 				}
