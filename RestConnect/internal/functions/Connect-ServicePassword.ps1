@@ -9,9 +9,8 @@
         Only cloud-only accounts can be used for this workflow.
         Consent to scopes must be granted before using them, as this command cannot show the consent prompt.
     
-	.PARAMETER ServiceUrl
-		The base url to the service connecting to.
-		Used for authentication, scopes and executing requests.
+	.PARAMETER Resource
+		The resource to authenticate to.
 
     .PARAMETER Credential
         Credentials of the user to connect as.
@@ -33,8 +32,8 @@
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
-		[uri]
-		$ServiceUrl,
+		[string]
+		$Resource,
 
 		[Parameter(Mandatory = $true)]
 		[System.Management.Automation.PSCredential]
@@ -53,8 +52,12 @@
 	)
 
 	$actualScopes = foreach ($scope in $Scopes) {
-		if ($scope -like 'https://*/*') { $scope }
-		else { "{0}://{1}/{2}" -f $ServiceUrl.Scheme, $ServiceUrl.Host, $scope }
+		if ($scope -like 'https://*/*') { $scope; continue }
+		if ($scope -like "$Resource/*") { $scope; continue }
+		"$Resource/$scope"
+	}
+	if (@($actualScopes).Count -gt 1 -and ($actualScopes | Where-Object { $_ -like '*/.default' })) {
+		$actualScopes = $actualScopes | Where-Object { $_ -notlike '*/.default' }
 	}
     
 	$request = @{

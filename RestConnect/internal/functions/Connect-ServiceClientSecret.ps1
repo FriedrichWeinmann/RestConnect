@@ -1,14 +1,13 @@
 ﻿function Connect-ServiceClientSecret {
     <#
 	.SYNOPSIS
-		Connets using a client secret.
+		Connects using a client secret.
 	
 	.DESCRIPTION
-		Connets using a client secret.
+		Connects using a client secret.
 	
-	.PARAMETER ServiceUrl
-		The base url to the service connecting to.
-		Used for authentication, scopes and executing requests.
+	.PARAMETER Resource
+		The resource to authenticate to.
 
 	.PARAMETER ClientID
 		The ID of the registered app used with this authentication request.
@@ -20,15 +19,15 @@
 		The actual secret used for authenticating the request.
 	
 	.EXAMPLE
-		PS C:\> Connect-ServiceClientSecret -ServiceUrl $url -ClientID '<ClientID>' -TenantID '<TenantID>' -ClientSecret $secret
+		PS C:\> Connect-ServiceClientSecret -Resource $token.Resource -ClientID '<ClientID>' -TenantID '<TenantID>' -ClientSecret $secret
 	
 		Connects to the specified tenant using the specified client and secret.
 #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-		[uri]
-		$ServiceUrl,
+		[string]
+		$Resource,
 
 		[Parameter(Mandatory = $true)]
         [string]
@@ -45,7 +44,7 @@
 	
     process {
 		$body = @{
-            resource      = '{0}://{1}' -f $ServiceUrl.Scheme, $ServiceUrl.Host
+            resource      = $Resource
             client_id     = $ClientID
             client_secret = [PSCredential]::new('NoMatter', $ClientSecret).GetNetworkCredential().Password
             grant_type    = 'client_credentials'

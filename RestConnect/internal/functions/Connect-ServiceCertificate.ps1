@@ -6,9 +6,8 @@
 	.DESCRIPTION
 		Connects to AAD using a application ID and a certificate.
 
-	.PARAMETER ServiceUrl
-		The base url to the service connecting to.
-		Used for authentication, scopes and executing requests.
+	.PARAMETER Resource
+		The resource to authenticate to.
 
 	.PARAMETER Certificate
 		The certificate to use for authentication.
@@ -20,7 +19,7 @@
 		The ID of the registered application used to authenticate as.
 	
 	.EXAMPLE
-		PS C:\> Connect-ServiceCertificate -Service MyAPI -ServiceUrl $url -Certificate $cert -TenantID $tenantID -ClientID $clientID
+		PS C:\> Connect-ServiceCertificate -Resource $token.Resource -Certificate $cert -TenantID $tenantID -ClientID $clientID
 	
 		Connects to the specified tenant using the specified app & cert.
 	
@@ -30,8 +29,8 @@
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-		[uri]
-		$ServiceUrl,
+		[string]
+		$Resource,
 
 		[Parameter(Mandatory = $true)]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]
@@ -71,7 +70,7 @@
         client_id             = $ClientID
         client_assertion      = $jwt
         client_assertion_type = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer'
-        scope                 = '{0}://{1}/.default' -f $ServiceUrl.Scheme, $ServiceUrl.Host
+        scope                 = "$($Resource)/.default"
         grant_type            = 'client_credentials'
     }
     $header = @{
