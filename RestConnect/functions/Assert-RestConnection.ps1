@@ -35,6 +35,11 @@
 	{
 		if ($script:tokens[$Service]) { return }
 		
-		Invoke-TerminatingException -Cmdlet $Cmdlet -Message "Not connected yet! Use Connect-RestService (or a service specific connection method) to establish a connection first." -Category ConnectionError
+		$message = "Not connected yet! Use Connect-RestService (or a service specific connection method) to establish a connection first."
+		if ($script:serviceMetadata.$Service.NotConnectedMessage) {
+			$message = $script:serviceMetadata.$Service.NotConnectedMessage
+		}
+
+		Invoke-TerminatingException -Cmdlet $Cmdlet -Message $message -Category ConnectionError
 	}
 }
