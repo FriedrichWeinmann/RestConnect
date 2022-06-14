@@ -19,6 +19,7 @@
 		
 		Override the default error message when trying to run AzureDevOps commands before connecting.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]
